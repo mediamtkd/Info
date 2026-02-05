@@ -3,74 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        body { background: black; margin: 0; overflow: hidden; font-family: sans-serif; }
-        #display-container { width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; }
-        img { max-width: 100%; max-height: 100%; object-fit: contain; display: none; }
-        .active { display: block; animation: fadeIn 1s; }
+        body { background: black; color: white; font-family: Arial, sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* VASEN SIVUPALKKI (30%) */
+        .sidebar { 
+            width: 30%; 
+            background: #111; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            border-right: 4px solid red; /* Tehdään punaisesta viivasta hieman paksumpi */
+            box-sizing: border-box;
+        }
+        
+        /* OIKEA SISÄLTÖALUE (70%) */
+        .main-content { 
+            width: 70%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            background: #000;
+            position: relative;
+        }
 
-        /* Pieni kello alakulmassa, jos haluat */
-        #mini-clock { position: absolute; bottom: 20px; right: 20px; color: white; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 5px; font-size: 20px; }
+        .clock { font-size: 80px; font-weight: bold; margin-bottom: 10px; color: #fff; }
+        .weather { width: 100%; height: 300px; border: none; }
+        
+        /* KUVAN TYYLI LOKEROSSA */
+        #rotating-image {
+            max-width: 95%;
+            max-height: 95%;
+            object-fit: contain; /* Pitää kuvan suhteet oikeana, ei venytä */
+            transition: opacity 1s ease-in-out; /* Pehmeä vaihto */
+            opacity: 1;
+        }
+
+        .fade-out { opacity: 0 !important; }
     </style>
 </head>
 <body>
-
-<div id="display-container">
-    <img id="priority-image" src="https://linkki-tärkeään-kuvaan.jpg">
-
-    <img class="random-image" src="https://kuva1.jpg">
-    <img class="random-image" src="https://kuva2.jpg">
-    <img class="random-image" src="https://kuva3.jpg">
-</div>
-
-<div id="mini-clock">00:00</div>
-
-<script>
-    const priorityImg = document.getElementById('priority-image');
-    const randomImgs = document.querySelectorAll('.random-image');
-    const clockElement = document.getElementById('mini-clock');
-    
-    let isShowingPriority = false;
-
-    // 1. FUNKTIO: Näytä satunnainen kuva
-    function showRandom() {
-        if (isShowingPriority) return; // Älä vaihda, jos tärkeä kuva on menossa
+    <div class="sidebar">
+        <div id="clock" class="clock">00:00</div>
+        <iframe class="weather" src="https://wttr.in/Helsinki?0&m&q&lang=fi"></iframe>
         
-        randomImgs.forEach(img => img.classList.remove('active'));
-        priorityImg.classList.remove('active');
-        
-        const randomIndex = Math.floor(Math.random() * randomImgs.length);
-        randomImgs[randomIndex].classList.add('active');
-    }
+        <div style="margin-top: auto; padding-bottom: 20px; text-align: center;">
+            <h2 style="color: red;">MALMIN TAEKWONDO</h2>
+            <p>Tervetuloa treeneihin!</p>
+        </div>
+    </div>
 
-    // 2. FUNKTIO: Näytä se "Tärkeä kuva"
-    function showPriority() {
-        isShowingPriority = true;
-        randomImgs.forEach(img => img.classList.remove('active'));
-        priorityImg.classList.add('active');
-        
-        console.log("Näytetään tärkeä kuva 30 sekunnin ajan...");
-        
-        // Palataan takaisin random-kiertoon 30 sekunnin kuluttua
-        setTimeout(() => {
-            isShowingPriority = false;
-            showRandom();
-        }, 30000); // 30000ms = 30 sekuntia
-    }
-
-    // AJASTIMET
-    setInterval(showRandom, 15000); // Vaihda random-kuva 15 sekunnin välein
-    setInterval(showPriority, 300000); // Näytä tärkeä kuva 5 minuutin (300 000ms) välein
-    
-    // Kello
-    setInterval(() => {
-        clockElement.innerText = new Date().toLocaleTimeString('fi-FI', {hour: '2-digit', minute:'2-digit'});
-    }, 1000);
-
-    // Käynnistys
-    showRandom();
-</script>
-
-</body>
-</html>
+    <div class="main-content">
